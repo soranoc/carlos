@@ -1,0 +1,23 @@
+*---Réponses Chapitre 3---*
+---------------------------
+
+
+1. Si le serveur n'est connecté à aucun client au moment de la fermeture,
+le serveur peut être relancé sans aucun problème. En revanche, si le serveur
+était connecté à un client au moment de sa fermeture, le serveur affichera
+le message d'erreur suivant si l'on tente de le relancer quelques secondes
+plus tard :
+
+   bind socket_serveur : Address already in use
+
+2. La commande crée un nouveau client et le connecte au serveur, mais ne
+déclenche pas l'affichage du message de bienvenue et se déconnecte
+instantanément.
+
+3. Le premier client lancé s'éxécute normalement, tandis que le deuxième
+n'affiche rien et se met en attente. Dès lors que le premier client est
+fermé et donc deconnecté du serveur, le port est libéré et le deuxième
+client peut se connecter correctement au serveur, affichant le message
+de bienvenue et entamant un fonctionnement normal. Deux clients ne peuvent
+donc pour l'instant pas se connecter en même temps au serveur, à cause de
+l'unicité du port d'écoute du serveur.

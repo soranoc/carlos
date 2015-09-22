@@ -8,9 +8,7 @@
 #include <string.h>
 
 
-
-int creer_serveur(){
-  
+int creer_serveur(int port){
   //Création de la socket
   int socket_serveur ;
   socket_serveur = socket ( AF_INET , SOCK_STREAM , 0);
@@ -22,11 +20,11 @@ int creer_serveur(){
   
   struct sockaddr_in saddr ;
   saddr.sin_family = AF_INET ; /* Socket ipv4 */
-  saddr.sin_port = htons (8080); /* Port d ' écoute */
+  saddr.sin_port = htons (port); /* Port d ' écoute */
   saddr.sin_addr.s_addr = INADDR_ANY ; /* écoute sur toutes les interfaces */
   if ( bind ( socket_serveur , ( struct sockaddr *)& saddr , sizeof ( saddr )) == -1)
     {
-      perror ( " bind socker_serveur " );
+      perror ( " bind socket_serveur " );
       /* traitement de l ' erreur */
     }
   
@@ -35,21 +33,5 @@ int creer_serveur(){
       perror ( " listen socket_serveur " );
       /* traitement d ' erreur */
     }
-  return 0;
-
-}
-/* Utilisation de la socket serveur */
-/* On peut maintenant dialoguer avec le client */
-int boucle_serveur(int socket_serveur){
-  int socket_client ;
-  socket_client = accept ( socket_serveur , NULL , NULL );
-  if ( socket_client == -1)
-    {
-      perror (" accept ");
-      /* traitement d ' erreur */
-    }
-  
-  const char * message_bienvenue = " Bonjour , bienvenue sur mon serveur \n " ;
-  write(socket_client, message_bienvenue , strlen(message_bienvenue));
- return 0;
+  return socket_serveur;
 }
