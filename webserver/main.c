@@ -4,6 +4,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <stdlib.h>
+#include <signal.h>
 
 #include "socket.h"
 
@@ -14,8 +15,10 @@ int main()
   int socket_client;
   int taille;
   char buffer[10];
-  
+
+  initialiser_signaux();
   socket_serveur=creer_serveur(8080);
+  
   while(1)
     {
       socket_client = accept ( socket_serveur , NULL , NULL );
@@ -35,7 +38,6 @@ int main()
 	  printf("%d\n", taille);
 	  taille=read(socket_client, buffer, 10);
 	}
-      printf("Big bisous\n");
     }
   
   return 0;
