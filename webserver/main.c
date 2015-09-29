@@ -15,6 +15,7 @@ int main()
   int socket_client;
   int taille;
   char buffer[10];
+  int pid;
 
   initialiser_signaux();
   socket_serveur=creer_serveur(8080);
@@ -27,18 +28,28 @@ int main()
 	  perror (" accept ");
 	  /* traitement d ' erreur */
 	}
-
-      sleep(1);
-      write(socket_client, message_bienvenue , strlen(message_bienvenue)+1);
-      
-      taille=read(socket_client, buffer, 10);
-      while(taille!=0 && taille!=-1)
+      pid = fork();
+      if(pid==-1)
 	{
-	  write(socket_client, buffer, taille);
-	  printf("%d\n", taille);
+	  perror(" Erreur Fork serveur ");
+	}
+      if(pid==0)
+	{
+	  sleep(1);
+	  write(socket_client, message_bienvenue , strlen(message_bienvenue)+1);
+	  
 	  taille=read(socket_client, buffer, 10);
+	  while(taille!=0 && taille!=-1)
+	    {
+	      write(socket_client, buffer, taille);
+	      printf("%d\n", taille);
+	      taille=read(socket_client, buffer, 10);
+	    }
+	}
+      else
+	{
+	  close(socket_client);
 	}
     }
-  
-  return 0;
+      return 0;
 }
