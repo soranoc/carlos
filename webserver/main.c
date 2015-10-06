@@ -13,9 +13,9 @@ int main()
   const char * message_bienvenue = " Bonjour , bienvenue sur mon serveur \n Cum saepe multa, tum memini domi in hemicyclio sedentem, ut solebat, cum et ego essem una et pauci admodum familiares, in eum sermonem illum incidere qui tum forte multis erat in ore. Meministi enim profecto, Attice, et eo magis, quod P. Sulpicio utebare multum, cum is tribunus plebis capitali odio a Q. Pompeio, qui tum erat consul, dissideret, quocum coniunctissime et amantissime vixerat, quanta esset hominum vel admiratio vel querella. Quid enim tam absurdum quam delectari multis inanimis rebus, ut honore, ut gloria, ut aedificio, ut vestitu cultuque corporis, animante virtute praedito, eo qui vel amare vel, ut ita dicam, redamare possit, non admodum delectari? Nihil est enim remuneratione benevolentiae, nihil vicissitudine studiorum officiorumque iucundius.Ipsam vero urbem Byzantiorum fuisse refertissimam atque ornatissimam signis quis ignorat? Quae illi, exhausti sumptibus bellisque maximis, cum omnis Mithridaticos impetus totumque Pontum armatum affervescentem in Asiam atque erumpentem, ore repulsum et cervicibus interclusum suis sustinerent, tum, inquam, Byzantii et postea signa illa et reliqua urbis ornanemta sanctissime custodita tenuerunt. \n" ;
   int socket_serveur;
   int socket_client;
-  int taille;
-  char buffer[10];
+  char buffer[80];
   int pid;
+  FILE* file;
 
   initialiser_signaux();
   socket_serveur=creer_serveur(8080);
@@ -28,6 +28,13 @@ int main()
 	  perror (" accept ");
 	  /* traitement d ' erreur */
 	}
+      
+      file = fdopen(socket_client, "w+");
+      if(file==NULL)
+	{
+	  perror ("fdopen error");
+	}
+      
       pid = fork();
       if(pid==-1)
 	{
@@ -37,15 +44,18 @@ int main()
 	{
 	  sleep(1);
 	  write(socket_client, message_bienvenue , strlen(message_bienvenue)+1);
+	  fgets(buffer, 80, file);
+	  fflush(file);
 	  
-	  taille=read(socket_client, buffer, 10);
-	  while(taille!=0 && taille!=-1)
+	  while(1)
 	    {
-	      write(socket_client, buffer, taille);
-	      printf("%d\n", taille);
-	      taille=read(socket_client, buffer, 10);
+	      fprintf(file, "<carlos> %s", buffer);
+	      fflush(file);
+	      fgets(buffer, 80, file);
+	      fflush(file);
 	    }
 	}
+      
       else
 	{
 	  close(socket_client);
