@@ -48,7 +48,7 @@ int creer_serveur(int port){
 
 void traitement_signal(int sig)
 {
-  printf("Signal %d reçu\n", sig);
+  printf("Signal %d recu\n", sig);
   waitpid(-1, &sig, WNOHANG);
 }
 
