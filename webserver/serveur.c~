@@ -1,0 +1,72 @@
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <stdlib.h>
+#include <signal.h>
+
+enum  http_method {
+  HTTP_GET ,
+  HTTP_UNSUPPORTED ,
+};
+
+typedef  struct
+{
+  enum  http_method  method;
+  int   major_version;
+  int   minor_version;
+  char *url;
+} http_request;
+
+char *fgets_or_exit(char *buffer , int size , FILE *stream)
+{
+  char* str = fgets(buffer, size, stream);
+  if(str==NULL)
+    {
+      printf("La connexion est interrompue !");
+      exit(1);
+    }
+  return str;
+}
+
+int parse_http_request(const char *request_line , http_request *request)
+{
+  int ok;
+  token = strtok(request_line, " ");
+  while(token)
+    {
+      ++tkCounter;
+      if(tkCounter==1 && strcmp(token,"GET")!=0)
+	{
+	  ok = 0;
+	}
+      if(tkCounter==2 && strcmp(token, "/")!=0)
+	{
+	  err404=1;
+	}	      
+      if(tkCounter > 3)
+	{
+	  ok = 0;
+	}
+      if(tkCounter == 3 && strcmp(token,"HTTP/1.0\r\n")!=0 && strcmp(token,"HTTP/1.1\r\n")!=0)
+	{
+	  ok = 0;
+	}
+      token=strtok(NULL," ");
+    } 
+  if(tkCounter < 3 )
+    {
+      ok = 0;
+    }
+  tkCounter=0;
+  while(ok==1 && ligneVide==0)
+    {
+      str = fgets_or_exit(buffer, 80, file);
+      if(str!= NULL && (strcmp(str, "\r\n")==0 || strcmp(str, "\n")==0))
+	{
+	  ligneVide=1;
+	}
+    }
+  return ok;
+}
