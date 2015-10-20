@@ -21,6 +21,7 @@ int main()
   int tkCounter=0;
   int ok = 1;
   int ligneVide =0;
+  int err404=0;
 
   initialiser_signaux();
   socket_serveur=creer_serveur(8080);
@@ -59,6 +60,11 @@ int main()
 		{
 		  ok = 0;
 		}
+	      if(tkCounter==2 && strcmp(token, "/")!=0)
+		{
+		  err404=1;
+		}
+	      
 	      if(tkCounter > 3)
 		{
 		  ok = 0;
@@ -83,7 +89,7 @@ int main()
 		  ligneVide=1;
 		}
 	    }
-	  if(ok==1)
+	  if(ok==1 && err404==0)
 	    {
 	      char *msg = "Bienvenue chez <carlos>\n";
 	      fprintf(file,"%s<carlos> HTTP/1.1 200 OK\r\n         Connection: close\r\n         Content-Length: %d\r\n         200 OK\r\n", msg, (int)strlen(msg));
@@ -91,8 +97,17 @@ int main()
 	    }
 	  else
 	    {
-	      fprintf(file,"<carlos> HTTP/1.1 400 Bad Request\r\n         Connection: close\r\n         Content-Length: 17\r\n         400 Bad request\r\n");
-	      fflush(file);
+	      if(err404==1)
+		{
+		  fprintf(file,"<carlos> HTTP/1.1 404 File Not Found\r\n         Connection: close\r\n         Content-Length: 0\r\n         404 File Not Found\r\n");
+		  fflush(file);
+		  exit(0);
+		}
+	      else
+		{
+		  fprintf(file,"<carlos> HTTP/1.1 400 Bad Request\r\n         Connection: close\r\n         Content-Length: 17\r\n         400 Bad request\r\n");
+		  fflush(file);
+		}
 	    }
 	  exit(0);
 	}
@@ -105,3 +120,6 @@ int main()
     }
   return 0;
 }
+
+
+
