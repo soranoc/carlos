@@ -1,3 +1,16 @@
-README
+****************
+*****README*****
+****************
 
-*Instructions*
+**Instructions**
+****************
+
+- Compilation : dans un terminal, exécutez la commande "make" dans les dossiers
+carlos et carlos/webserver.
+
+- Configuration : dans le fichier main.c, modifiez le port à la ligne 24 si vous
+souhaitez configurer le serveur sur un port différent de 8080.
+
+- Exécution : dans le répertoire carlos/webserver, exécutez la commande ./carlos
+pour lancer le serveur. Vous pourrez ensuite y accéder via une commande client ou
+un navigateur web, sur localhost:port. 
